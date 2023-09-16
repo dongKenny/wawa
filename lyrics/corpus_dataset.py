@@ -1,11 +1,21 @@
-from datasets import IterableDataset, Features, Value, Dataset
+from datasets import Features, Value, Dataset
+
+
+def clean_lyrics():
+    with open('../lyrics/lyrics.txt', 'r', newline='', encoding='UTF-8') as reader, \
+            open('../lyrics/lyrics_cleaned.txt', 'w', newline='', encoding='UTF-8') as writer:
+        for line in reader.readlines():
+            if len(line.split('SEP')) < 3:
+                continue
+            writer.write(line)
 
 
 def uta_data_generator():
-    with open('../lyrics/lyrics_cleaned.txt', 'r', newline='', encoding='UTF-8') as reader:
+    with open('../lyrics/lyrics.txt', 'r', newline='', encoding='UTF-8') as reader:
         for idx, line in enumerate(reader.readlines()):
             line_data = line.split('SEP')
-            yield {'artist': line_data[0], 'title': line_data[1], 'lyrics': line_data[2]}
+            if len(line_data) == 3:
+                yield {'artist': line_data[0], 'title': line_data[1], 'lyrics': line_data[2]}
 
 
 def create_uta_dataset():
@@ -16,3 +26,11 @@ def create_uta_dataset():
 
 def tokenize_uta_dataset(song, tokenizer):
     return tokenizer(song['lyrics'], truncation=True)
+
+
+def main():
+    clean_lyrics()
+
+
+if __name__ == '__main__':
+    main()
