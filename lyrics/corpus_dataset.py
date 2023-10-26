@@ -11,7 +11,7 @@ def clean_lyrics():
 
 
 def uta_data_generator():
-    with open('../lyrics/lyrics.txt', 'r', newline='', encoding='UTF-8') as reader:
+    with open('/raid/kdong4/wawa/lyrics/lyrics.txt', 'r', newline='', encoding='UTF-8') as reader:
         for idx, line in enumerate(reader.readlines()):
             line_data = line.split('SEP')
             if len(line_data) == 3:
@@ -19,17 +19,19 @@ def uta_data_generator():
 
 
 def create_uta_dataset():
-    return Dataset.from_generator(uta_data_generator, features=Features({'artist': Value(dtype='string'),
+    dataset = Dataset.from_generator(uta_data_generator, features=Features({'artist': Value(dtype='string'),
                                                                          'title': Value(dtype='string'),
                                                                          'lyrics': Value(dtype='string')}))
+    dataset.save_to_disk('uta_dataset.hf')
 
 
 def tokenize_uta_dataset(song, tokenizer):
-    return tokenizer(song['lyrics'], truncation=True)
+    return tokenizer(song['lyrics'], truncation=True, padding=True)
 
 
 def main():
-    clean_lyrics()
+    # clean_lyrics()
+    create_uta_dataset()
 
 
 if __name__ == '__main__':
