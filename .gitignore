@@ -161,3 +161,6 @@ cython_debug/
 
 llms/*nohup*
 llms/open_calm*
+llms/*prompt*.txt
+lyrics/lyrics_cleaned.txt
+uta_dataset.hf/
