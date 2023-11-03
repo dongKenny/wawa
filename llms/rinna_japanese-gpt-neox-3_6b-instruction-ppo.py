@@ -17,7 +17,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained("rinna/japanese-gpt-neox-3.6b-instruction-ppo", use_fast=False)
     model = AutoModelForCausalLM.from_pretrained("rinna/japanese-gpt-neox-3.6b-instruction-ppo", quantization_config=bnb_config)
     
-    prompt = create_rinna_prompt(4)
+    prompt = create_rinna_prompt(4, True)
     token_ids = tokenizer.encode(prompt, add_special_tokens=False, return_tensors="pt")
 
     for i in range(2):
