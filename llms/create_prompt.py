@@ -1,3 +1,6 @@
+from lyrics.prompt_gen import extract_keywords
+
+
 def create_lyrics_prompt(num_songs, write_prompt=False):
     prompt = 'あなたは日本の作詞家です。あなたに歌の名前と歌詞の例をあげて、いきものがかりのスタイルで歌詞を作成して下さい。そのプロンプト形式は：「曲名」という歌を作って下さい。「曲名」の歌詞は「歌詞」です。次のラインはプロンプトの例です。\n'
     with open('./llms/prompt_songs.txt', 'r') as reader:
@@ -34,7 +37,7 @@ def create_rinna_prompt(num_songs, write_prompt=False):
             title = line[1]
             lyrics = line[2]
 
-            user = f'{user_context}「{title}」という歌を作って下さい。いきものがかりのスタイルで「愛」の言葉を使って、曲を作成して下さい。'
+            user = f'{user_context}「{title}」という歌を作って下さい。いきものがかりのスタイルで「{extract_keywords(lyrics)}」の言葉を使って、曲を作成して下さい。'
             system = f'歌詞は「{lyrics.strip()}」です。'
             prompt.append(create_speaker_text_prompt('ユーザー', user))
             prompt.append(create_speaker_text_prompt('システム', system))
@@ -51,7 +54,6 @@ def create_rinna_prompt(num_songs, write_prompt=False):
         + "<NL>"
         + "システム: "
     )
-
 
     if write_prompt:
         with open('./llms/rinna_prompt.txt', 'w') as writer:
