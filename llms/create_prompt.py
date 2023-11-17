@@ -1,4 +1,5 @@
 from lyrics.prompt_gen import extract_keywords
+import random
 
 
 def create_lyrics_prompt(num_songs, write_prompt=False):
@@ -29,21 +30,21 @@ def create_speaker_text_prompt(speaker, text):
 def create_rinna_prompt(num_songs, write_prompt=False):
     prompt = []
 
-    user_context = 'あなたは日本の作詞家です。あなたに歌の名前と歌詞の例をあげて、いきものがかりのスタイルで歌詞を作成して下さい。そのプロンプト形式は：「曲名」という歌を作って下さい。いきものがかりのスタイルで「話題の言葉」の言葉を使って、曲を作成して下さい。'
+    user_context = 'システムは日本の作詞家です。システムに歌の名前と歌詞の例をあげて、いきものがかりのスタイルで歌詞を作成して下さい。そのプロンプト形式は：「曲名」という歌を作って下さい。いきものがかりのスタイルで「話題の言葉」の言葉を使って、曲を作成して下さい。'
 
     with open('./llms/prompt_songs.txt', 'r') as reader:
+        lines = reader.readlines()
         for _ in range(num_songs):
-            line = reader.readline().split('SEP')
-            title = line[1]
-            lyrics = line[2]
+            artist, title, lyrics = random.choice(lines).split('SEP')
 
-            user = f'{user_context}「{title}」という歌を作って下さい。いきものがかりのスタイルで「{extract_keywords(lyrics)}」の言葉を使って、曲を作成して下さい。'
-            system = f'歌詞は「{lyrics.strip()}」です。'
+            user = f'{user_context}「{title.strip()}」という歌を作って下さい。{artist.strip()}のスタイルで「{extract_keywords(lyrics)}」の言葉を使って、曲を作成して下さい。'
+            system = f'「{title}」の歌詞は「{lyrics.strip()}」です。'
             prompt.append(create_speaker_text_prompt('ユーザー', user))
             prompt.append(create_speaker_text_prompt('システム', system))
     
     title = '夏の雨'
-    prompt.append(create_speaker_text_prompt('ユーザー', f'「{title}」という歌を作って下さい。いきものがかりのスタイルで「雨」の言葉を使って、曲を作成して下さい。'))
+    keyword = '雨'
+    prompt.append(create_speaker_text_prompt('ユーザー', f'「{title}」という歌を作って下さい。いきものがかりのスタイルで「{keyword}」の言葉を使って、曲を作成して下さい。'))
     prompt = [
         f"{uttr['speaker']}: {uttr['text']}"
         for uttr in prompt
@@ -52,16 +53,14 @@ def create_rinna_prompt(num_songs, write_prompt=False):
     prompt = (
         prompt
         + "<NL>"
-        + "システム: "
+        + f"システム: 「{title}」の歌詞は「"
     )
 
     if write_prompt:
         with open('./llms/rinna_prompt.txt', 'w') as writer:
-            writer.writelines(prompt)
+            writer.writelines(prompt.replace("<NL>", "\n"))
 
     return prompt
-
-
 
 
 def main():
