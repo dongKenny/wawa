@@ -2,8 +2,8 @@ from datasets import Features, Value, Dataset
 
 
 def clean_lyrics():
-    with open('../lyrics/lyrics.txt', 'r', newline='', encoding='UTF-8') as reader, \
-            open('../lyrics/lyrics_cleaned.txt', 'w', newline='', encoding='UTF-8') as writer:
+    with open('./lyrics/lyrics.txt', 'r', newline='', encoding='UTF-8') as reader, \
+            open('./lyrics/lyrics_cleaned.txt', 'w', newline='', encoding='UTF-8') as writer:
         for line in reader.readlines():
             if len(line.split('SEP')) < 3:
                 continue
@@ -30,8 +30,8 @@ def tokenize_uta_dataset(song, tokenizer):
 
 
 def main():
-    # clean_lyrics()
-    create_uta_dataset()
+    clean_lyrics()
+    # create_uta_dataset()
 
 
 if __name__ == '__main__':

@@ -27,23 +27,20 @@ def create_speaker_text_prompt(speaker, text):
     }
 
 
-def create_rinna_prompt(num_songs, write_prompt=False):
+def create_rinna_prompt(num_songs, artist, song_title, song_keyword, song_data=None, write_prompt=False):
     prompt = []
 
-    user_context = 'システムは日本の作詞家です。システムに歌の名前と歌詞の例をあげて、いきものがかりのスタイルで歌詞を作成して下さい。そのプロンプト形式は：「曲名」という歌を作って下さい。いきものがかりのスタイルで「話題の言葉」の言葉を使って、曲を作成して下さい。'
+    user_context = f'システムは日本の作詞家です。システムに歌の名前と歌詞の例をあげて、{artist}のスタイルで歌詞を作成して下さい。そのプロンプト形式は：「曲名」という歌を作って下さい。{artist}のスタイルで「話題の言葉」の言葉を使って、曲を作成して下さい。'
 
-    with open('./llms/prompt_songs.txt', 'r') as reader:
-        lines = reader.readlines()
-        for _ in range(num_songs):
-            artist, title, lyrics = random.choice(lines).split('SEP')
+    songs = song_data[artist]
+    for idx, (title, lyrics) in enumerate(list(songs.items())[:num_songs]):
+        user = f'{user_context if idx == 0 else ""}「{title}」という歌を作って下さい。{artist}のスタイルで「{extract_keywords(lyrics)}」の言葉を使って、曲を作成して下さい。'
+        system = f'「 {title} 」の歌詞は「{lyrics.strip()}」です。'
+        prompt.append(create_speaker_text_prompt('ユーザー', user))
+        prompt.append(create_speaker_text_prompt('システム', system))
 
-            user = f'{user_context}「{title.strip()}」という歌を作って下さい。{artist.strip()}のスタイルで「{extract_keywords(lyrics)}」の言葉を使って、曲を作成して下さい。'
-            system = f'「{title}」の歌詞は「{lyrics.strip()}」です。'
-            prompt.append(create_speaker_text_prompt('ユーザー', user))
-            prompt.append(create_speaker_text_prompt('システム', system))
-    
-    title = '夏の雨'
-    keyword = '雨'
+    title = song_title
+    keyword = song_keyword
     prompt.append(create_speaker_text_prompt('ユーザー', f'「{title}」という歌を作って下さい。いきものがかりのスタイルで「{keyword}」の言葉を使って、曲を作成して下さい。'))
     prompt = [
         f"{uttr['speaker']}: {uttr['text']}"

@@ -1,6 +1,7 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline
 from create_prompt import create_rinna_prompt
+from lyrics.lyric_options import map_artists_to_songs_and_lyrics, create_artist_datalists
 
 
 torch.cuda.empty_cache()
@@ -21,7 +22,7 @@ def create_tokenizer():
     return AutoTokenizer.from_pretrained("rinna/japanese-gpt-neox-3.6b-instruction-ppo", use_fast=False)
 
 
-def generate_with_pipeline(model, tokenizer):
+def generate_with_pipeline(model, tokenizer, artist, song_title, song_keyword, song_data):
     with torch.autocast("cuda"): 
         pipe = pipeline(
             "text-generation",
@@ -31,15 +32,15 @@ def generate_with_pipeline(model, tokenizer):
             device_map="auto",
         )
 
-        seqs = pipe(create_rinna_prompt(3, True), max_new_tokens=512)
+        seqs = pipe(create_rinna_prompt(3, artist, song_title, song_keyword, song_data, True), max_new_tokens=512)
         output = seqs[0]['generated_text'].split('<NL>')[-1]
-        print(output)
+        return output
 
 
 def main():
     tokenizer = create_tokenizer()
     model = create_model()
-    generate_with_pipeline(model, tokenizer)
+    print(generate_with_pipeline(model, tokenizer, 'いきものがかり', '夏の雨', '雨', map_artists_to_songs_and_lyrics()))
 
 
 if __name__ == '__main__':
