@@ -10,18 +10,18 @@
                     <form method="POST" action={{action}}>
                         <label class="label">Artist</label>
                         <div class="control">
-                            <input class="input" type="text" list="artist" name="artist" placeholder="Enter Japanese Artist" required="required">
+                            <input class="input" type="text" list="artist" name="artist" placeholder="Enter Japanese Artist" value="{{artist}}" required="required">
                             <datalist id="artist">
                                 {{artist_options | safe}}
                             </datalist>
                         </div>
                         <label class="label">日本語 title</label>
                         <div class="control">
-                            <input class="input" type="text" name="title" placeholder="Enter Japanese Title" required="required">
+                            <input class="input" type="text" name="title" placeholder="Enter Japanese Title" value="{{title}}" required="required">
                         </div>
                         <label class="label">日本語 keyword</label>
                         <div class="control">
-                            <input class="input" type="text" name="keyword" placeholder="Enter Japanese Keyword" required="required">
+                            <input class="input" type="text" name="keyword" placeholder="Enter Japanese Keyword" value="{{keyword}}" required="required">
                         </div><br/>
                         <div class="control">
                             <button class="button is-link" type="submit">

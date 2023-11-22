@@ -50,7 +50,7 @@ def rinna():
     if artist and title and keyword:
         lyrics = generate_with_pipeline(model, tokenizer, artist, title, keyword, artist_data)
 
-    return render_template("rinna.html", jp_lyrics=lyrics, artist_options=datalist_options, action="/rinna")
+    return render_template("rinna.html", artist=artist, title=title, keyword=keyword, jp_lyrics=lyrics, artist_options=datalist_options, action="/rinna")
 
 
 if __name__ == "__main__":
