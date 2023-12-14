@@ -33,15 +33,15 @@ def create_rinna_prompt(num_songs, artist, song_title, song_keyword, song_data=N
     user_context = f'システムは日本の作詞家です。システムに歌の名前と歌詞の例をあげて、{artist}のスタイルで歌詞を作成して下さい。そのプロンプト形式は：「曲名」という歌を作って下さい。{artist}のスタイルで「話題の言葉」の言葉を使って、曲を作成して下さい。'
 
     songs = song_data[artist]
-    for idx, (title, lyrics) in enumerate(list(songs.items())[:num_songs]):
+    for idx, (title, lyrics) in enumerate(random.sample(list(songs.items()), num_songs)):
         user = f'{user_context if idx == 0 else ""}「{title}」という歌を作って下さい。{artist}のスタイルで「{extract_keywords(lyrics)}」の言葉を使って、曲を作成して下さい。'
-        system = f'「 {title} 」の歌詞は「{lyrics.strip()}」です。'
+        system = f'「{title}」の歌詞は「{lyrics.strip()}」です。'
         prompt.append(create_speaker_text_prompt('ユーザー', user))
         prompt.append(create_speaker_text_prompt('システム', system))
 
     title = song_title
     keyword = song_keyword
-    prompt.append(create_speaker_text_prompt('ユーザー', f'「{title}」という歌を作って下さい。いきものがかりのスタイルで「{keyword}」の言葉を使って、曲を作成して下さい。'))
+    prompt.append(create_speaker_text_prompt('ユーザー', f'「{title}」という歌を作って下さい。{artist}のスタイルで「{keyword}」の言葉を使って、曲を作成して下さい。'))
     prompt = [
         f"{uttr['speaker']}: {uttr['text']}"
         for uttr in prompt

@@ -1,13 +1,16 @@
 from datasets import Features, Value, Dataset
 
 
-def clean_lyrics():
+def clean_lyrics(lyrics_only=False):
     with open('./lyrics/lyrics.txt', 'r', newline='', encoding='UTF-8') as reader, \
-            open('./lyrics/lyrics_cleaned.txt', 'w', newline='', encoding='UTF-8') as writer:
+            open('./lyrics/lyrics_cleaned.txt' if not lyrics_only else './lyrics/lyrics_cleaned_rnn.txt', 'w', newline='', encoding='UTF-8') as writer:
         for line in reader.readlines():
             if len(line.split('SEP')) < 3:
                 continue
-            writer.write(line)
+            if lyrics_only:
+                writer.write(line.split('SEP')[2])
+            else:
+                writer.write(line)
 
 
 def uta_data_generator():
@@ -30,7 +33,7 @@ def tokenize_uta_dataset(song, tokenizer):
 
 
 def main():
-    clean_lyrics()
+    clean_lyrics(True)
     # create_uta_dataset()
 
 

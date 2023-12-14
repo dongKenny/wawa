@@ -2,12 +2,14 @@ import os
 import time
 from dotenv import load_dotenv
 
+import tensorflow as tf
+
 from rinna_instruction import create_model, create_tokenizer, generate_with_pipeline
 from lyrics.lyric_options import map_artists_to_songs_and_lyrics, create_artist_datalists
+from llms.wawa_rnn import rnn_generate_text
 
 from pyngrok import ngrok
 from flask import Flask, render_template, request
-
 
 model, tokenizer = create_model(), create_tokenizer()
 load_dotenv()
@@ -51,6 +53,18 @@ def rinna():
         lyrics = generate_with_pipeline(model, tokenizer, artist, title, keyword, artist_data)
 
     return render_template("rinna.html", artist=artist, title=title, keyword=keyword, jp_lyrics=lyrics, artist_options=datalist_options, action="/rinna")
+
+
+@app.route("/rnn", methods=["GET", "POST"])
+def rnn():
+    keyword = request.form.get("keyword", "")
+    lyrics = 'No lyrics generated'
+
+    if keyword:
+        # Error with loading both models on the GPUs, can just run wawa_rnn with a keyword to generate
+        lyrics = rnn_generate_text(keyword)
+
+    return render_template("rnn.html", keyword=keyword, jp_lyrics=lyrics, action="/rnn")
 
 
 if __name__ == "__main__":

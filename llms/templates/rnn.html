@@ -1,0 +1,29 @@
+{% include "head.html" %}
+            <section class="section is-large">
+                <h1 class="title">RNN Japanese Lyrics Generation</h1><br/>
+                <h2 class="subtitle">
+                    This application uses Tensorflow's standard RNN to <strong>generate</strong> Japanese song lyrics.<br/><br/>
+
+                    Enter some Japanese seed text.
+                </h2><hr/>
+                <div class="field">
+                    <form method="POST" action={{action}}>
+                        <label class="label">日本語 keyword</label>
+                        <div class="control">
+                            <input class="input" type="text" name="keyword" placeholder="Enter Japanese Keyword" value="{{keyword}}" required="required">
+                        </div><br/>
+                        <div class="control">
+                            <button class="button is-link" type="submit">
+                            <span class="icon is-medium">
+                                <i class="fas fa-music"></i>
+                            </span>
+                            <span>Generate Results</span>
+                        </button>
+                        </div>
+                    </form>
+                </div><hr/>
+                <div class="box">
+                    {{jp_lyrics|safe}}
+                </div>
+            </section>
+{% include "foot.html" %}

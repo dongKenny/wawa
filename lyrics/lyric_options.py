@@ -3,6 +3,7 @@ def map_artists_to_songs_and_lyrics():
 
     with open('./lyrics/lyrics_cleaned.txt', 'r', encoding='UTF-8') as reader:
         for line in reader.readlines():
+            
             artist, title, lyrics = line.split(' SEP ')
             if artist not in data:
                 data[artist] = {}
