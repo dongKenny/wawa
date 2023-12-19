@@ -3,6 +3,7 @@ import random
 
 
 def create_lyrics_prompt(num_songs, write_prompt=False):
+    # Used to create a prompt with songs from いきものがかり to test the open_calm_7b model
     prompt = 'あなたは日本の作詞家です。あなたに歌の名前と歌詞の例をあげて、いきものがかりのスタイルで歌詞を作成して下さい。そのプロンプト形式は：「曲名」という歌を作って下さい。「曲名」の歌詞は「歌詞」です。次のラインはプロンプトの例です。\n'
     with open('./llms/prompt_songs.txt', 'r') as reader:
         for _ in range(num_songs):
@@ -28,6 +29,7 @@ def create_speaker_text_prompt(speaker, text):
 
 
 def create_rinna_prompt(num_songs, artist, song_title, song_keyword, song_data=None, write_prompt=False):
+    # Used to create the User/System back-and-forth conversation prompt for the Rinna Instruct model
     prompt = []
 
     user_context = f'システムは日本の作詞家です。システムに歌の名前と歌詞の例をあげて、{artist}のスタイルで歌詞を作成して下さい。そのプロンプト形式は：「曲名」という歌を作って下さい。{artist}のスタイルで「話題の言葉」の言葉を使って、曲を作成して下さい。'

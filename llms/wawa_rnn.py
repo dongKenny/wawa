@@ -5,6 +5,7 @@ import os
 from one_step import OneStep
 
 
+# RNN model from Tensorflow's guide to text generation with RNNs
 class WawaRnn(tf.keras.Model):
   def __init__(self, vocab_size, embedding_dim, rnn_units):
     super().__init__(self)
@@ -96,25 +97,26 @@ def generate_text(one_step_model, seed_text='雨が', n=512):
     result = tf.strings.join(result)
     return result[0].numpy().decode('UTF-8')
   
-  
+
 def rnn_generate_text(keywords):
-  with open('./lyrics/lyrics_cleaned_rnn.txt', 'r', encoding='UTF-8') as reader:
-    text = '\n'.join(reader.readlines())
-        
-  vocab = sorted(set(text))
-  ids_from_chars = tf.keras.layers.StringLookup(vocabulary=list(vocab), mask_token=None)
-  chars_from_ids = tf.keras.layers.StringLookup(vocabulary=ids_from_chars.get_vocabulary(), invert=True, mask_token=None)
-  
-  model = create_model(ids_from_chars)
-  checkpoint_dir = './llms/rnn_training_checkpoints'
-  checkpoint = os.path.join(checkpoint_dir, "check_10")
-  
-  rnn = load_rnn(checkpoint, model, chars_from_ids, ids_from_chars)
-  return generate_text(rnn, seed_text=keywords)
+    # Given keywords to start the prompt, load the RNN model and generate text
+    with open('./lyrics/lyrics_cleaned_rnn.txt', 'r', encoding='UTF-8') as reader:
+        text = '\n'.join(reader.readlines())
+
+    vocab = sorted(set(text))
+    ids_from_chars = tf.keras.layers.StringLookup(vocabulary=list(vocab), mask_token=None)
+    chars_from_ids = tf.keras.layers.StringLookup(vocabulary=ids_from_chars.get_vocabulary(), invert=True, mask_token=None)
+
+    model = create_model(ids_from_chars)
+    checkpoint_dir = './llms/rnn_training_checkpoints'
+    checkpoint = os.path.join(checkpoint_dir, "check_10")
+
+    rnn = load_rnn(checkpoint, model, chars_from_ids, ids_from_chars)
+    return generate_text(rnn, seed_text=keywords)
 
 
 def main():
-  print(rnn_generate_text(input('Enter Japanese seed text: ')))
+    print(rnn_generate_text(input('Enter Japanese seed text: ')))
 
 
 if __name__ == '__main__':

@@ -13,6 +13,7 @@ def map_artists_to_songs_and_lyrics():
 
 
 def create_artist_datalists(data):
+    # Creates the HTML datalist options for the deployed rinna page
     result = []
     for artist in data:
         result.append(f'<option value="{artist}">')

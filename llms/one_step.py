@@ -1,6 +1,7 @@
 import tensorflow as tf
 
 
+# OneStep model from Tensorflow's guide for RNN text generation
 class OneStep(tf.keras.Model):
   def __init__(self, model, chars_from_ids, ids_from_chars, temperature=1.0):
     super().__init__()

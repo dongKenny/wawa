@@ -59,5 +59,6 @@ def main():
             generate_response_engineered(model, tokenizer, prompt, '雨', temperature, top_p, repetition)
             #雨、愛、夏休み
 
+
 if __name__ == '__main__':
     main()

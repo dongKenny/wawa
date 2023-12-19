@@ -59,7 +59,8 @@ def main():
     tokenized_uta_data = uta_data.map(tokenize_uta_dataset, batched=True, fn_kwargs={'tokenizer': tokenizer}).remove_columns(uta_data['train'].column_names)
     data_collator = create_data_collator(tokenizer)
     training_args = create_training_args()
-    
+
+    # Trains the model by feeding it tokenized lyrics
     trainer = Trainer(
         model=model,
         args=training_args,

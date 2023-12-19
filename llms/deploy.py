@@ -11,6 +11,7 @@ from llms.wawa_rnn import rnn_generate_text
 from pyngrok import ngrok
 from flask import Flask, render_template, request
 
+# Load model once
 model, tokenizer = create_model(), create_tokenizer()
 load_dotenv()
 
@@ -19,6 +20,7 @@ app.config.from_mapping(
     BASE_URL='http://localhost:5000'
 )
 
+# Create an Ngrok tunnel to localhost
 ngrok.set_auth_token(os.getenv('NGROK_SECRET'))
 public_url = ngrok.connect(5000).public_url
 print(f'* ngrok tunnel "{public_url}" -> http://127.0.0.1:5000')
@@ -29,6 +31,7 @@ initialized = False
 http_tunnel = ngrok.connect()
 artist_data = map_artists_to_songs_and_lyrics()
 datalist_options = '\n'.join(create_artist_datalists(artist_data))
+
 
 @app.route("/")
 def index():

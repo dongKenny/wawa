@@ -2,6 +2,7 @@ from datasets import Features, Value, Dataset
 
 
 def clean_lyrics(lyrics_only=False):
+    # False to have cleaned lyrics with the song author/title, True to have only the lyrics for training the RNN
     with open('./lyrics/lyrics.txt', 'r', newline='', encoding='UTF-8') as reader, \
             open('./lyrics/lyrics_cleaned.txt' if not lyrics_only else './lyrics/lyrics_cleaned_rnn.txt', 'w', newline='', encoding='UTF-8') as writer:
         for line in reader.readlines():
